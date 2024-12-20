@@ -36,7 +36,7 @@ public class UsuarioController(ContextoDados contexto) : ControllerBase
 
     [HttpPost]
     [Route("v1/usuarios")]
-    public async Task<IActionResult> AdicionarUsuario(Add_Alt_UsuarioViewModelo model)
+    public async Task<IActionResult> AdicionarUsuario(EditorUsuarioViewModelo model)
     {
         if (!ModelState.IsValid)
             return BadRequest(new RespostaViewModelo<UsuarioModelo>(ModelState.ObterEstadoDeErros()));

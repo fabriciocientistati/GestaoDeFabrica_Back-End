@@ -77,7 +77,7 @@ public class CategoriaController(ContextoDados contexto) : ControllerBase
     
     [HttpPost]
     [Route("v1/categorias")]
-    public async Task<IActionResult> AdicionarCategoria(Add_Alt_CategoriaViewModelo modelo)
+    public async Task<IActionResult> AdicionarCategoria(EditorCategoriaViewModelo modelo)
     {
         if (!ModelState.IsValid)
             return BadRequest(new RespostaViewModelo<CategoriaModelo>(ModelState.ObterEstadoDeErros()));
@@ -108,7 +108,7 @@ public class CategoriaController(ContextoDados contexto) : ControllerBase
 
     [HttpPut]
     [Route("v1/categorias/{id:int}")]
-    public async Task<IActionResult> AtualizarCategoria(int id, Add_Alt_CategoriaViewModelo modelo)
+    public async Task<IActionResult> AtualizarCategoria(int id, EditorCategoriaViewModelo modelo)
     {
         if (!ModelState.IsValid)
             return BadRequest(new RespostaViewModelo<CategoriaModelo>(ModelState.ObterEstadoDeErros()));
@@ -164,4 +164,4 @@ public class CategoriaController(ContextoDados contexto) : ControllerBase
             return StatusCode(500, new RespostaViewModelo<CategoriaModelo>("Falha interna no servidor"));
         }
     }
-}    
+}

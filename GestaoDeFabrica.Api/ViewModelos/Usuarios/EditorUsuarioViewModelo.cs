@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace FabricaGestao.Api.ViewModelos.Usuarios;
 
-public class Add_Alt_UsuarioViewModelo
+public class EditorUsuarioViewModelo
 {
     [Required(ErrorMessage = "Campo nome obrigatório")]
     [StringLength(40, MinimumLength = 3, ErrorMessage = "Este campo deve conter no maximo 40 caracteres e no minimo 3 caracteres")]
