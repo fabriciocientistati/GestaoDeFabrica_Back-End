@@ -36,17 +36,17 @@ public class UsuarioController(ContextoDados contexto) : ControllerBase
 
     [HttpPost]
     [Route("v1/usuarios")]
-    public async Task<IActionResult> AdicionarUsuario(EditorUsuarioViewModelo model)
+    public async Task<IActionResult> AdicionarUsuario(EditorUsuarioViewModelo modelo)
     {
         if (!ModelState.IsValid)
             return BadRequest(new RespostaViewModelo<UsuarioModelo>(ModelState.ObterEstadoDeErros()));
 
         var usuario = new UsuarioModelo
         {
-            UsuLogin = model.UsuLogin,
-            UsuNome = model.UsuNome,
-            UsuEmail = model.UsuEmail,
-            UsuSenha = model.UsuSenha,
+            UsuLogin = modelo.UsuLogin,
+            UsuNome = modelo.UsuNome,
+            UsuEmail = modelo.UsuEmail,
+            UsuSenha = modelo.UsuSenha,
             UsuIncPor = 1
         };
         
@@ -63,6 +63,66 @@ public class UsuarioController(ContextoDados contexto) : ControllerBase
         catch(DbUpdateException)
         {
             return StatusCode(500, new RespostaViewModelo<UsuarioModelo>("Não foi possível adicionar"));
+        }
+        catch
+        {
+            return StatusCode(500, new RespostaViewModelo<UsuarioModelo>("Falha interna no servidor"));
+        }
+    }
+
+    [HttpPut]
+    [Route("v1/usuarios/{id:int}")]
+    public async Task<IActionResult> AtualizarUsuarios(int id, UsuarioModelo modelo)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(new RespostaViewModelo<UsuarioModelo>(ModelState.ObterEstadoDeErros()));
+        
+        try
+        {
+            var usuario = await contexto.TBUsuarios.FirstOrDefaultAsync(x => x.UsuId == id);
+
+            if (usuario == null)
+                return NotFound(new RespostaViewModelo<UsuarioModelo>("Não foi possível encontrar"));
+
+            usuario.UsuNome = modelo.UsuNome;
+            usuario.UsuLogin = modelo.UsuLogin;
+            usuario.UsuEmail = modelo.UsuEmail;
+            usuario.Perfil = modelo.Perfil;
+
+            contexto.TBUsuarios.Update(usuario);
+            await contexto.SaveChangesAsync();
+
+            return Ok(new RespostaViewModelo<UsuarioModelo>(usuario));
+        }
+        catch (DbUpdateException)
+        {
+            return StatusCode(500, new RespostaViewModelo<UsuarioModelo>("Não foi possível atualizar"));
+        }
+        catch
+        {
+            return StatusCode(500, new RespostaViewModelo<UsuarioModelo>("Falha interna no servidor"));
+        }
+    }
+
+    [HttpDelete]
+    [Route("v1/usuarios/{id:int}")]
+    public async Task<IActionResult> ApagarUsuario(int id)
+    {
+        try
+        {
+            var usuario = await contexto.TBUsuarios.FirstOrDefaultAsync(x => x.UsuId == id);
+
+            if (usuario == null)
+                return NotFound(new RespostaViewModelo<UsuarioModelo>("Não foi possível encontrar"));
+
+            contexto.TBUsuarios.Remove(usuario);
+            await contexto.SaveChangesAsync();
+
+            return Ok(new RespostaViewModelo<UsuarioModelo>(usuario));
+        }
+        catch(DbUpdateException)
+        {
+            return StatusCode(500, new RespostaViewModelo<UsuarioModelo>("Não foi possível apagar"));
         }
         catch
         {
